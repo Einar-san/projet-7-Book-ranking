@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+const path = require('path');
 const express = require('express')
 const mongoose = require('mongoose')
 const argon2 = require('argon2')
@@ -5,7 +7,7 @@ const authRoutes = require('./routes/auth');
 const app = express()
 const port = 3000
 
-
+dotenv.config({ path: path.resolve(__dirname, 'config', '.env') });
 //MongoDB connection
 mongoose.connect('mongodb+srv://sena21ouarem:myoldgrim@clustertest0.ff8vuc2.mongodb.net/?retryWrites=true&w=majority',
     { useNewUrlParser: true,
