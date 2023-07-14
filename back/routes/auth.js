@@ -3,8 +3,8 @@ const express = require('express');
 const argon2 = require('argon2');
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
-const validateEmail = require('../middleware/credentialsValidation');
-const {authenticateUser} = require('../middleware/authenticateUser');
+const validateEmail = require('../middlewares/credentialsValidation');
+const {authenticateUser} = require('../middlewares/authenticateUser');
 
 const router = express.Router();
 
@@ -37,9 +37,10 @@ router.post('/signup', validateEmail, async (req, res) => {
 router.post('/login', authenticateUser, (req, res) => {
     try {
         // Generate a JWT token
-        const token = jwt.sign({ userId: req.user._id }, process.env.SECRET_KEY);
+        const token = jwt.sign({ userId: req.user._id}, process.env.SECRET_KEY);
+        const userId = req.user
 
-        res.status(200).json({ message: 'Login successful', token });
+        res.status(200).json({ message: 'Login successful', userId, token});
     } catch (error) {
         res.status(500).json({ error: 'An error in auth.js occurred' });
     }

@@ -5,16 +5,17 @@ const booksSchema = mongoose.Schema({
     title: { type: 'string', require: true},
     author: { type: 'string', require: true },
     imageUrl: { type: 'string', require: true},
-    genre: { type: 'number', require: true},
-    // Stor user ratings
+    year: {type: 'number', require: true},
+    genre: { type: 'string', require: true},
+    // Store user ratings
     ratings: [
         {
-            userId: 'number',
+            userId: 'string',
             grade: 'number'
         }
     ],
     // Global rating
-    averageRating: { type: 'number', require: true},
+    averageRating: { type: 'number',default: 0},
     createdAt: { type: 'date', default: Date.now}
 })
 
