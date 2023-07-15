@@ -2,7 +2,6 @@ const dotenv = require('dotenv');
 const path = require('path');
 const express = require('express')
 const mongoose = require('mongoose')
-const argon2 = require('argon2')
 const authRoutes = require('./routes/auth');
 const routeBooks = require('./routes/routeBooks')
 const cors = require('cors');
