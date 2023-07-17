@@ -19,7 +19,11 @@ router.get('/:id', bookController.getBookById)
 // Rate a book
 router.post('/:id/rating', verifyToken, bookController.bookRating)
 
+// Update a book
+router.put('/:id', verifyToken, upload.single('image'), bookController.updateBook)
 
+// Delete a Book
+router.delete('/:id', verifyToken, bookController.deleteBook)
 
 
 module.exports = router;

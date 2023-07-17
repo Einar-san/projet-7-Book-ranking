@@ -13,8 +13,8 @@ dotenv.config({ path: path.resolve(__dirname, 'config', '.env') });
 mongoose.connect('mongodb+srv://sena21ouarem:myoldgrim@clustertest0.ff8vuc2.mongodb.net/?retryWrites=true&w=majority',
     { useNewUrlParser: true,
         useUnifiedTopology: true })
-    .then(() => console.log('Connexion à MongoDB réussie !'))
-    .catch(() => console.log('Connexion à MongoDB échouée !'));
+    .then(() => console.log('Connexion à MongoDB réussie'))
+    .catch(() => console.log('Connexion à MongoDB échouée'));
 
 // Enable CORS for all routes
 app.use(cors({
