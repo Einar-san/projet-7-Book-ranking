@@ -38,7 +38,7 @@ We used the Cors library on the express server to provide the communication betw
 
 **Run : ``npm install`` in "front" directory to install all dependencies**
 
-**Run : ``npm start in`` "front" directory to run react application**
+**Run : ``npm start`` in "front" directory to run react application**
 
 
 
