@@ -1,6 +1,5 @@
 const path = require('path');
 const Book = require('../models/books');
-
 const fs = require("fs");
 const resizeSave = require("../helpers/resizeSave");
 
@@ -12,8 +11,7 @@ const addBook = async (req, res) => {
 
         // Resize the uploaded image to a width of 460 pixels
         const imageBuffer = req.file.buffer; // Access the uploaded image as a buffer
-
-        const imageUrl = await resizeSave(imageBuffer) // Resize and save the file, then return the image url
+        const imageUrl = await resizeSave(imageBuffer); // Resize and save the file, then return the image URL
 
         // Create a new book document
         const newBook = new Book({
@@ -30,7 +28,7 @@ const addBook = async (req, res) => {
         // Save the book to the database
         await newBook.save();
 
-        res.status(201).json({ message: 'Book successfully saved'});
+        res.status(201).json({ message: 'Book successfully saved' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred' });
@@ -185,6 +183,13 @@ const deleteBook = async (req, res) => {
 
         // Find the book by ID in the database
         const book = await Book.findById(id);
+
+
+        // Check if the user is the owner of the book
+        if (book.userId.toString() !== req.userId) {
+            return res.status(403).json({ error: 'You are not authorized to update this book' });
+        }
+
 
         if (!book) {
             return res.status(404).json({ error: 'Book not found' });

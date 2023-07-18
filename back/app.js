@@ -5,12 +5,15 @@ const mongoose = require('mongoose')
 const authRoutes = require('./routes/auth');
 const routeBooks = require('./routes/routeBooks')
 const cors = require('cors');
+const mongoSanitize = require('express-mongo-sanitize');
 const app = express()
 const port = 4000
 
 dotenv.config({ path: path.resolve(__dirname, 'config', '.env') });
+
+
 //MongoDB connection
-mongoose.connect('mongodb+srv://sena21ouarem:myoldgrim@clustertest0.ff8vuc2.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect(process.env.MONGODB_URI,
     { useNewUrlParser: true,
         useUnifiedTopology: true })
     .then(() => console.log('Connexion à MongoDB réussie'))
@@ -22,8 +25,15 @@ app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'PUT'],
 }));
 
-//JSON parsing
+// JSON parsing
+
 app.use(express.json());
+
+// Add the express-mongo-sanitize middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(mongoSanitize());
+
+
 
 app.use('/bookCollection', express.static(path.join(__dirname, 'bookCollection')));
 
