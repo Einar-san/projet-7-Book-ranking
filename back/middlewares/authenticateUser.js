@@ -1,6 +1,6 @@
 const argon2 = require('argon2');
 const User = require('../models/users');
-const jwt = require('jsonwebtoken');
+
 
 // Middleware for user authentication
 const authenticateUser = async (req, res, next) => {
