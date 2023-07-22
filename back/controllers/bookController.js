@@ -2,10 +2,33 @@ const path = require('path');
 const Book = require('../models/books');
 const fs = require("fs");
 const resizeSave = require("../helpers/resizeSave");
+const { validationResult } = require('express-validator');
+const { check } = require('express-validator');
 
-// Controller for adding a new book
+// Controller for all book routes
+
+
+// Validation rules
+const addBookValidationRules = [
+    check('book').notEmpty().withMessage('Book data is required').isJSON().withMessage('Book data must be a valid JSON object'),
+    check('userId').notEmpty().withMessage('userId is required').isString().withMessage('userId must be a string'),
+    check('title').notEmpty().withMessage('Title is required').isString().withMessage('Title must be a string'),
+    check('author').notEmpty().withMessage('Author is required').isString().withMessage('Author must be a string'),
+    check('year').notEmpty().withMessage('Year is required').isNumeric().withMessage('Year must be a number'),
+    check('genre').notEmpty().withMessage('Genre is required').isString().withMessage('Genre must be a string'),
+    check('ratings').optional().isArray().withMessage('Ratings must be an array'),
+    check('averageRating').optional().isNumeric().withMessage('Average rating must be a number'),
+];
 const addBook = async (req, res) => {
+
+    // Trigger data validation
+    const errors = validationResult(req);
+    console.log(errors)
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors });
+    }
     try {
+
         const { book } = req.body;
         const { userId, title, author, year, genre, ratings, averageRating } = JSON.parse(book);
 
@@ -34,7 +57,6 @@ const addBook = async (req, res) => {
         res.status(500).json({ error });
     }
 };
-
 // Get all books
 const getAllBooks = async (req, res) => {
     try {
