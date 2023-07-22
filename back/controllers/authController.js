@@ -22,7 +22,7 @@ const signup = async (req, res) => {
         res.status(201).json({ message: 'User created successfully', user: savedUser });
 
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred' });
+        res.status(500).json({ error });
     }
 }
 
@@ -36,7 +36,7 @@ const login = (req, res) => {
 
         res.status(200).json({ message: 'Login successful', userId, token});
     } catch (error) {
-        res.status(500).json({ error: 'An error in auth.js occurred' });
+        res.status(500).json({ error });
     }
 }
 

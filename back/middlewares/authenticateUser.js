@@ -16,7 +16,9 @@ const authenticateUser = async (req, res, next) => {
         // Verify the password
         const isPasswordValid = await argon2.verify(user.password, password);
         if (!isPasswordValid) {
-            return res.status(401).json({ error: 'Invalid email or password' });
+            const wrongPasswordError = new Error('Invalid email or password')
+            wrongPasswordError.statusCode = 401
+            throw wrongPasswordError
         }
 
         // Attach the user object to the request for further use
@@ -25,7 +27,13 @@ const authenticateUser = async (req, res, next) => {
 
         next();
     } catch (error) {
-        res.status(500).json({ error: 'An error in the middlewares auth occurred' });
+        if (error.statusCode) {
+            // If custom error with status code, send the specific error message and status code
+            res.status(error.statusCode).json({ error });
+        } else {
+            // For other errors, set status code to 500 and send the error
+            res.status(500).json({ error });
+        }
     }
 };
 

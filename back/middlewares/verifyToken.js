@@ -18,7 +18,7 @@ const verifyToken = async (req, res, next) => {
 
         // Find the user in the database using the decoded user ID
         const user = await User.findById(decodedToken.userId);
-        // Check if the user exists and if the email and password match
+        // Check if the user exists
         if (!user) {
             throw new Error('auth error');
         }
@@ -29,7 +29,7 @@ const verifyToken = async (req, res, next) => {
         // Proceed to the next middleware
         next();
     } catch (error) {
-        res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error });
     }
 };
 

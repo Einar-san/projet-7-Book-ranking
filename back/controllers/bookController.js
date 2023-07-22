@@ -31,7 +31,7 @@ const addBook = async (req, res) => {
         res.status(201).json({ message: 'Book successfully saved' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'An error occurred' });
+        res.status(500).json({ error });
     }
 };
 
@@ -43,7 +43,7 @@ const getAllBooks = async (req, res) => {
 
         res.json(books);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching books' });
+        res.status(500).json({ error });
     }
 }
 
@@ -61,7 +61,7 @@ const getBookById = async (req, res) => {
 
         res.json(book);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching the book' });
+        res.status(500).json({ error});
     }
 }
 
@@ -75,14 +75,19 @@ const bookRating = async (req, res) => {
         const book = await Book.findById(id);
 
         if (!book) {
-            return res.status(404).json({ error: 'Book not found' });
+            const notFoundError = new Error('Book not found');
+            notFoundError.statusCode = 404;
+            throw notFoundError;
         }
 
         // Check if the user has already rated the book
         const existingRating = book.ratings.find((rating) => rating.userId === userId);
         if (existingRating) {
-            return res.status(400).json({ error: 'User has already rated this book' });
+            const alreadyRatedError = new Error('User has already rated this book');
+            alreadyRatedError.statusCode = 400;
+            throw alreadyRatedError;
         }
+
 
         // Add the new rating to the array of ratings for the book
         book.ratings.push({ userId, grade: rating });
@@ -98,7 +103,13 @@ const bookRating = async (req, res) => {
 
         res.json(book);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while adding the rating' });
+        if (error.statusCode) {
+            // If custom error with status code, send the specific error message and status code
+            res.status(error.statusCode).json({ error });
+        } else {
+            // For other errors, set status code to 500 and send the error
+            res.status(500).json({ error });
+        }
     }
 }
 
@@ -109,7 +120,7 @@ const bestRating = async (req, res) => {
         const books = await Book.find().sort({ averageRating: -1 }).limit(3);
         res.json(books);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching the top-rated books' });
+        res.status(500).json({ error });
     }
 }
 
@@ -131,12 +142,16 @@ const updateBook = async (req, res) => {
         const book = await Book.findById(id);
 
         if (!book) {
-            return res.status(404).json({ error: 'Book not found' });
+            const notFoundError = new Error('Book not found');
+            notFoundError.statusCode = 404;
+            throw notFoundError;
         }
 
         // Check if the user is the owner of the book
         if (book.userId.toString() !== parsedBookData.userId) {
-            return res.status(403).json({ error: 'You are not authorized to update this book' });
+            const notAuthorizedError = new Error('You are not authorized to update this book');
+            notAuthorizedError.statusCode = 403;
+            throw notAuthorizedError;
         }
 
         // Check if the request contains a file
@@ -172,7 +187,13 @@ const updateBook = async (req, res) => {
 
         res.json({ message: 'Book updated successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while updating the book' });
+        if (error.statusCode) {
+            // If custom error with status code, send the specific error message and status code
+            res.status(error.statusCode).json({ error});
+        } else {
+            // For other errors, set status code to 500 and send the error
+            res.status(500).json({ error });
+        }
     }
 }
 
@@ -184,15 +205,18 @@ const deleteBook = async (req, res) => {
         // Find the book by ID in the database
         const book = await Book.findById(id);
 
+        // Check if the book exists
+        if (!book) {
+            const notFoundError = new Error('Book not found');
+            notFoundError.statusCode = 404;
+            throw notFoundError;
+        }
 
         // Check if the user is the owner of the book
         if (book.userId.toString() !== req.userId) {
-            return res.status(403).json({ error: 'You are not authorized to update this book' });
-        }
-
-
-        if (!book) {
-            return res.status(404).json({ error: 'Book not found' });
+            const notAuthorizedError = new Error('You are not authorized to delete this book');
+            notAuthorizedError.statusCode = 403;
+            throw notAuthorizedError;
         }
 
         // Remove the image file if it exists
@@ -207,7 +231,13 @@ const deleteBook = async (req, res) => {
 
         res.json({ message: 'Book deleted successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while deleting the book' });
+        if (error.statusCode) {
+            // If custom error with status code, send the specific error message and status code
+            res.status(error.statusCode).json({ error});
+        } else {
+            // For other errors, set status code to 500 and send the error
+            res.status(500).json({ error });
+        }
     }
 }
 
