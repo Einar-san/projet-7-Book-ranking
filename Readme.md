@@ -1,6 +1,6 @@
 # Getting started with "Mon vieux grimoire" local environnement setup
 
-The project is build with a react client application, an express server side application and mongodb database
+The project is build with a react client application, an express server side application and mongodb database !!! check express setup for .env config !!!
 
 ## Routes :
 
@@ -33,6 +33,12 @@ We used the Cors library on the express server to provide the communication betw
 **Run : ``npm install`` in "back" directory to install all dependencies**
 
 **Run : ``node app.js`` in "back" directory to run the server**
+
+**Add the following lines to back/config/.env : 
+SECRET_KEY=9DAD755F3DC77CFFA41956DED9638
+MONGODB_URI=mongodb+srv://sena21ouarem:myoldgrim@clustertest0.ff8vuc2.mongodb.net/?retryWrites=true&w=majority
+
+--!!!! strictly for developement needs !!!!-- 
 
 ### `React setup : `
 
